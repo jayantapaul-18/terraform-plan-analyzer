@@ -1,0 +1,31 @@
+# --- Configuration for Terraform Plan Analyzer ---
+
+# Resource types considered critical if destroyed
+critical_delete_types:
+  - aws_instance
+  - aws_db_instance
+
+# Resource type *patterns* considered sensitive if updated or replaced
+# (Use parts of the type name)
+sensitive_update_types:
+  - security_group # Matches aws_security_group, google_compute_firewall etc.
+  - _iam_ # Matches aws_iam_role, aws_iam_policy etc.
+  - _firewall # Matches various firewall types
+  - network_acl
+  - route_table
+  - subnet # Potentially sensitive depending on context
+
+# Scores assigned to different change actions for overall impact calculation
+impact_scores:
+  created: 1
+  updated: 2
+  destroyed: 4 # Increased default score
+  replaced: 5 # Increased default score
+  read: 0
+  no_changes: 0
+
+# Configuration for resource tagging analysis
+tagging_analysis:
+  enabled: true # Set to true to enable tag checking
+  required_tags:
+    - Application # e.g., JP
